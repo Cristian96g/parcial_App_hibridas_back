@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const blogSchema = new mongoose.Schema({
+const jobSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
@@ -9,19 +9,22 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
+  location: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
     required: true
   },
   imageUrl: { // Agregar el campo imageUrl
     type: String,
     required: true // Puedes cambiar esto si no es obligatorio
-  },
-  date: {
-    type: Date,
-    default: Date.now
   }
 });
 
-export default mongoose.model('Blog', blogSchema);
+export default mongoose.model('Job', jobSchema);

@@ -2,8 +2,7 @@ import Blog from '../models/blogModel.js';
 
 const createBlog = async (req, res) => {
   try {
-    const { title, content, author } = req.body;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+    const { title, content, author, imageUrl } = req.body;
 
     const newBlog = new Blog({
       title,
@@ -41,13 +40,26 @@ const getBlogById = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { title, content, author, imageUrl } = req.body;
+
+    // Asegúrate de que imageUrl sea válido y no esté vacío
+    if (typeof imageUrl !== 'string' || !imageUrl.startsWith('http')) {
+      return res.status(400).json({ message: 'Invalid image URL' });
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { title, content, author, imageUrl },
+      { new: true }
+    );
+
     if (!updatedBlog) return res.status(404).json({ message: 'Blog not found' });
     res.json(updatedBlog);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 const deleteBlog = async (req, res) => {
   try {

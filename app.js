@@ -4,12 +4,9 @@ import mongoose from "mongoose";
 import { userRoutes } from "./routes/index.js"
 import { commentRoutes } from "./routes/index.js";
 import { blogRoutes } from "./routes/blogRoutes.js"
-
 import { emailRoutes } from "./routes/emailRoutes.js"
+import { jobRoutes } from './routes/jobRoutes.js'
 import cors from "cors"
-
-import "dotenv/config"
-
 
 mongoose.connect("mongodb://127.0.0.1:27017/fundacion", {
   useNewUrlParser: true,
@@ -22,12 +19,16 @@ mongoose.connect("mongodb://127.0.0.1:27017/fundacion", {
 
 const app = express();
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Cambia esto al puerto donde está corriendo tu frontend si es diferente
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/emails', emailRoutes); 
 
-// // Servir archivos estáticos
+// // Middleware para servir archivos estáticos
+// console.log('Serving static files from:', path.join(__dirname, 'uploads'));
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
@@ -41,6 +42,7 @@ const PORT = process.env.PORT || 3002;
 app.use('/users', userRoutes);
 app.use('/blogs', blogRoutes);
 app.use('/comments', commentRoutes);
+app.use('/jobs', jobRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
